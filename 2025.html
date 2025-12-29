@@ -114,17 +114,14 @@
     bgm.onplay = () => musicTrigger.classList.add('playing');
     bgm.onpause = () => musicTrigger.classList.remove('playing');
 
-    // 加载留言
-    /***********************
+     /***********************
      * 多级嵌套评论系统
      ***********************/
     
     // 当前回复的父评论 ID
-    let currentParentId = null;
+    let currentReplyBox = null;
     
-    /**
-     * 将扁平 comments 转成树结构
-     */
+    // 将扁平 comments 转成树结构
     function buildCommentTree(comments) {
       const map = {};
       const roots = [];
@@ -138,6 +135,8 @@
           const parent = map[c.parent_id];
           if (parent) {
             parent.children.push(map[c.id]);
+          } else {
+            roots.push(map[c.id]); // 防止父评论不存在
           }
         } else {
           roots.push(map[c.id]);
@@ -147,19 +146,16 @@
       return roots;
     }
     
-    let currentReplyBox = null;  // 记录当前打开的 inline 回复框
-    
+    // 渲染单条评论
     function renderComment(comment, level = 0) {
       const bgColor = colors[comment.name.length % colors.length];
       const firstChar = comment.name.charAt(0).toUpperCase();
       const indent = level * 24;
-      
-      // 超过 3 层默认折叠
-      const isFolded = level >= 3;
+    
+      const isFolded = level >= 3; // 超过 3 层默认折叠
       const foldedClass = isFolded ? 'folded' : '';
-      
       const toggleBtn = isFolded ? `<div class="toggle-children" onclick="toggleFold(this)">展开回复</div>` : '';
-      
+    
       return `
         <div class="comment-item ${foldedClass}" style="margin-left:${indent}px">
           <div class="comment-avatar" style="background:${bgColor}">${firstChar}</div>
@@ -189,13 +185,11 @@
     
     // 显示 inline 回复框
     function showInlineReply(parentId, btn) {
-      // 移除上一个 inline 回复框
       if (currentReplyBox) {
         currentReplyBox.remove();
         currentReplyBox = null;
       }
     
-      // 创建新回复框
       const div = document.createElement('div');
       div.className = 'inline-reply-box';
       div.innerHTML = `
@@ -204,7 +198,6 @@
         <button type="button" onclick="cancelInlineReply(this)">取消</button>
       `;
     
-      // 插入到当前评论下
       btn.closest('.comment-content').appendChild(div);
       currentReplyBox = div;
     
@@ -243,9 +236,29 @@
       btn.closest('.inline-reply-box').remove();
       currentReplyBox = null;
     }
+    
+    // 加载留言
+    async function loadComments() {
+      try {
+        const res = await fetch(`/api/comment?page=${PAGE}`);
+        const comments = await res.json();
+    
+        if (!comments || comments.length === 0) {
+          commentList.innerHTML = '<p style="text-align:center; color:#ccc; margin-top:20px;">暂无留言</p>';
+          return;
+        }
+    
+        const tree = buildCommentTree(comments);
+        commentList.innerHTML = tree.map(c => renderComment(c)).join('');
+      } catch (err) {
+        console.error(err);
+        commentList.innerHTML = '<p style="color:red;">加载失败</p>';
+      }
+    }
+    
+    // 初始化加载
+    loadComments();
 
-
-  </script>
 </body>
   
 <footer>
