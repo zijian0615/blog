@@ -114,153 +114,100 @@
     bgm.onplay = () => musicTrigger.classList.add('playing');
     bgm.onpause = () => musicTrigger.classList.remove('playing');
 
-     /***********************
-     * 多级嵌套评论系统
-     ***********************/
-    
-    // 当前回复的父评论 ID
-    let currentReplyBox = null;
-    
-    // 将扁平 comments 转成树结构
-    function buildCommentTree(comments) {
-      const map = {};
-      const roots = [];
-    
-      comments.forEach(c => {
-        map[c.id] = { ...c, children: [] };
-      });
-    
-      comments.forEach(c => {
-        if (c.parent_id) {
-          const parent = map[c.parent_id];
-          if (parent) {
-            parent.children.push(map[c.id]);
-          } else {
-            roots.push(map[c.id]); // 防止父评论不存在
-          }
-        } else {
-          roots.push(map[c.id]);
-        }
-      });
-    
-      return roots;
-    }
-    
-    // 渲染单条评论
-    function renderComment(comment, level = 0) {
-      const bgColor = colors[comment.name.length % colors.length];
-      const firstChar = comment.name.charAt(0).toUpperCase();
-      
-      // --- 修正点：只声明一次 indent，并限制最大缩进 ---
-      const maxIndentLevel = 5;
-      const indent = Math.min(level, maxIndentLevel) * 20; 
-    
-      const isFolded = level >= 3; 
-      const foldedClass = isFolded ? 'folded' : '';
-      const toggleBtn = isFolded ? `<div class="toggle-children" onclick="toggleFold(this)">展开回复</div>` : '';
-    
-      return `
-        <div class="comment-item ${foldedClass}" style="margin-left:${indent}px">
-          <div class="comment-avatar" style="background:${bgColor}">${firstChar}</div>
-          <div class="comment-content">
-            <div class="comment-header">
-              <span class="comment-name">${comment.name}</span>
-              <span class="comment-time">${formatTime(comment.created_at)}</span>
-            </div>
-            <div class="comment-body">${comment.content}</div>
-            <div class="comment-actions">
-              <button onclick="showInlineReply(${comment.id}, this)">回复</button>
-            </div>
-            ${toggleBtn}
-            <div class="comment-children">
-              ${comment.children.map(child => renderComment(child, level + 1)).join('')}
-            </div>
-          </div>
-        </div>
-      `;
-    }
-    
-    // 切换折叠
-    function toggleFold(toggleElement) {
-      const commentItem = toggleElement.closest('.comment-item');
-      commentItem.classList.toggle('folded');
-      toggleElement.innerText = commentItem.classList.contains('folded') ? '展开回复' : '收起回复';
-    }
-    
-    // 显示 inline 回复框
-    function showInlineReply(parentId, btn) {
-      if (currentReplyBox) {
-        currentReplyBox.remove();
-        currentReplyBox = null;
-      }
-    
-      const div = document.createElement('div');
-      div.className = 'inline-reply-box';
-      div.innerHTML = `
-        <textarea rows="3" placeholder="回复..."></textarea>
-        <button>发送</button>
-        <button type="button" onclick="cancelInlineReply(this)">取消</button>
-      `;
-    
-      btn.closest('.comment-content').appendChild(div);
-      currentReplyBox = div;
-    
-      const sendBtn = div.querySelector('button');
-      const textarea = div.querySelector('textarea');
-    
-      sendBtn.onclick = async () => {
-        const content = textarea.value.trim();
-        if (!content) return alert('内容不能为空');
-    
-        sendBtn.disabled = true;
-        sendBtn.innerText = '发送中...';
-    
-        try {
-          await fetch('/api/comment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-              page: PAGE,
-              name: document.getElementById('name').value || '匿名',
-              content,
-              parent_id: parentId
-            })
-          });
-          currentReplyBox.remove();
-          currentReplyBox = null;
-          await loadComments();
-        } catch (err) {
-          alert('发送失败，请稍后再试');
-        }
-      };
-    }
-    
-    // 取消 inline 回复
-    function cancelInlineReply(btn) {
-      btn.closest('.inline-reply-box').remove();
-      currentReplyBox = null;
-    }
-    
-    // 加载留言
+        // 加载留言
     async function loadComments() {
       try {
         const res = await fetch(`/api/comment?page=${PAGE}`);
         const comments = await res.json();
-    
+        
         if (!comments || comments.length === 0) {
           commentList.innerHTML = '<p style="text-align:center; color:#ccc; margin-top:20px;">暂无留言</p>';
           return;
         }
     
-        const tree = buildCommentTree(comments);
-        commentList.innerHTML = tree.map(c => renderComment(c)).join('');
+        // --- 排序算法开始 ---
+        let thread = []; // 存储最终排序后的数组
+        let mainComments = comments.filter(c => !c.content.trim().startsWith('@'));
+        let replies = comments.filter(c => c.content.trim().startsWith('@'));
+    
+        mainComments.forEach(main => {
+          thread.push(main); // 先放主留言
+          // 寻找所有回复这条主留言的评论（通过检查内容里是否包含 @用户名）
+          let relatedReplies = replies.filter(r => r.content.includes(`@${main.name}`));
+          thread.push(...relatedReplies); // 把属于它的回复紧跟其后
+        });
+    
+        // 处理那些可能没匹配上的孤儿回复（可选）
+        replies.forEach(r => {
+            if (!thread.includes(r)) thread.push(r);
+        });
+        // --- 排序算法结束 ---
+    
+        commentList.innerHTML = thread.map(c => {
+          const isReply = c.content.trim().startsWith('@');
+          const bgColor = colors[c.name.length % colors.length];
+          const firstChar = c.name.charAt(0).toUpperCase();
+          
+          return `
+            <div class="comment-item ${isReply ? 'reply-item' : ''}">
+              <div class="comment-avatar" style="background: ${bgColor}">${firstChar}</div>
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-name">${c.name} ${isReply ? '<small class="reply-tag">回复</small>' : ''}</span>
+                  <span class="comment-time">${formatTime(c.created_at)}</span>
+                </div>
+                <div class="comment-body">${c.content}</div>
+                <div class="comment-actions">
+                  <button onclick="replyTo('${c.name}')">回复</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
       } catch (err) {
         console.error(err);
         commentList.innerHTML = '<p style="color:red;">加载失败</p>';
       }
     }
-    
-    // 初始化加载
+
+    // 回复快捷操作
+    function replyTo(username) {
+      const textarea = document.getElementById("content");
+      textarea.value = `@${username} `;
+      textarea.focus();
+    }
+
+    // 提交留言
+    document.getElementById("comment-form").onsubmit = async (e) => {
+      e.preventDefault();
+      const nameInput = document.getElementById("name");
+      const contentInput = document.getElementById("content");
+      const btn = e.target.querySelector('button');
+
+      btn.disabled = true;
+      btn.innerText = '发送中...';
+
+      try {
+        await fetch('/api/comment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            page: PAGE, 
+            name: nameInput.value, 
+            content: contentInput.value 
+          })
+        });
+        contentInput.value = '';
+        await loadComments();
+      } catch (err) {
+        alert('发送失败，请稍后再试');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '发布留言';
+      }
+    }
+
+    // 初始加载
     loadComments();
   </script>
 
