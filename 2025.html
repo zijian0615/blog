@@ -73,17 +73,20 @@
           commentList.innerHTML = '<p style="text-align:center; color:#ccc; margin-top:20px;">暂无留言</p>';
           return;
         }
-
+    
         commentList.innerHTML = comments.map(c => {
+          // 判断是否是回复（检查内容是否以 @ 开头）
+          const isReply = c.content.trim().startsWith('@');
           const bgColor = colors[c.name.length % colors.length];
           const firstChar = c.name.charAt(0).toUpperCase();
           
+          // 如果是回复，添加缩进样式类 'reply-item'
           return `
-            <div class="comment-item">
+            <div class="comment-item ${isReply ? 'reply-item' : ''}">
               <div class="comment-avatar" style="background: ${bgColor}">${firstChar}</div>
               <div class="comment-content">
                 <div class="comment-header">
-                  <span class="comment-name">${c.name}</span>
+                  <span class="comment-name">${c.name} ${isReply ? '<small class="reply-tag">回复</small>' : ''}</span>
                   <span class="comment-time">${formatTime(c.created_at)}</span>
                 </div>
                 <div class="comment-body">${c.content}</div>
@@ -95,7 +98,7 @@
           `;
         }).join('');
       } catch (err) {
-        commentList.innerHTML = '<p style="color:red;">加载留言失败，请检查后端配置</p>';
+        commentList.innerHTML = '<p style="color:red;">加载失败</p>';
       }
     }
 
