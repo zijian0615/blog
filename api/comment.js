@@ -7,10 +7,10 @@ const supabase = createClient(supabaseUrl, supabaseKey)
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    const { page, name, content } = req.body
+    const { page, name, content, parent_id } = req.body
     const { data, error } = await supabase
       .from('comments')
-      .insert([{ page, name, content }])
+      .insert([{ page, name, content, parent_id }])
     if (error) return res.status(500).json({ error: error.message })
     return res.status(200).json({ success: true })
   }
