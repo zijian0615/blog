@@ -6,101 +6,6 @@
   <title>年度记录 · Yearly Notes</title>
   <style>
     :root {
-      --bg: #fafafa;
-      --card: #ffffff;
-      --text: #222;
-      --muted: #777;
-      --accent: #4f7cff;
-      --radius: 14px;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Inter", "Helvetica Neue", Arial, sans-serif;
-      background: var(--bg); color: var(--text); line-height: 1.7;
-    }
-    header {
-      padding: 56px 20px 32px; max-width: 920px; margin: auto;
-    }
-    header h1 { font-size: 2.2rem; margin: 0 0 8px; }
-    header p { color: var(--muted); margin: 0; }
-    main { max-width: 920px; margin: auto; padding: 0 20px 80px; }
-    .year-list {
-      display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-      gap: 20px; margin-top: 40px;
-    }
-    .year-card {
-      background: var(--card); padding: 24px; border-radius: var(--radius);
-      box-shadow: 0 8px 30px rgba(0,0,0,.04); text-decoration: none; color: inherit;
-      transition: transform .15s ease, box-shadow .15s ease;
-    }
-    .year-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 36px rgba(0,0,0,.08);
-    }
-    .year-card h2 { margin: 0 0 8px; font-size: 1.4rem; }
-    .year-card p { margin: 0; color: var(--muted); font-size: .95rem; }
-    footer {
-      text-align: center; color: var(--muted); font-size: .85rem; padding: 40px 0;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>年度记录</h1>
-    <p>每一年一页，慢慢回看人生的轨迹。</p>
-  </header>
-
-  <main>
-    <section class="year-list">
-      <a class="year-card" href="2025.html">
-        <h2>2025</h2>
-        <p>研究与生活的再平衡</p>
-      </a>
-      <a class="year-card" href="2024.html">
-        <h2>2024</h2>
-        <p>转折与积累的一年</p>
-      </a>
-      <a class="year-card" href="2023.html">
-        <h2>2023</h2>
-        <p>探索方向，建立节奏</p>
-      </a>
-    </section>
-  </main>
-
-  <footer>
-    © 2025 Your Name · Yearly Notes
-  </footer>
-</body>
-</html>
- -->
-<!-- <!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <title>年度记录</title>
-  <link rel="stylesheet" href="assets/style.css">
-</head>
-<body>
-  <header>
-    <h1>年度记录</h1>
-    <p>每一年一页，回看时间的轨迹。</p>
-  </header>
-
-  <main class="year-list">
-    <a href="2025.html">2025</a>
-    <a href="2024.html">2024</a>
-    <a href="2023.html">2023</a>
-  </main>
-</body>
-</html> -->
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>年度记录 · Yearly Notes</title>
-  <style>
-    :root {
       --bg: #f5f5f7;
       --card: rgba(255, 255, 255, 0.75);
       --text: #1d1d1f;
@@ -305,6 +210,208 @@
       });
     });
   </script>
+</body>
+</html> -->
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>No Code Found</title>
+  <style>
+    :root {
+      --bg: #f9f9f7; /* 类似纸张的暖白 */
+      --card: #ffffff;
+      --text: #2c2c2c;
+      --muted: #8e8e93;
+      --accent: #5d5d5d; /* 沉稳的中性色 */
+      --radius: 12px;
+    }
+
+    * { box-sizing: border-box; transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+
+    body {
+      margin: 0;
+      font-family: "Georgia", "Source Han Serif CN", "Songti SC", serif; /* 切换为衬线体，更有文学感 */
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    header {
+      padding: 120px 20px 80px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    header h1 {
+      font-size: 3rem;
+      font-weight: 700;
+      margin: 0 0 20px;
+      letter-spacing: -1px;
+    }
+
+    header .subtitle {
+      color: var(--muted);
+      font-size: 1.1rem;
+      max-width: 500px;
+      line-height: 1.8;
+      font-style: italic;
+    }
+
+    main {
+      max-width: 900px;
+      margin: auto;
+      padding: 0 20px 100px;
+    }
+
+    section { margin-bottom: 80px; }
+
+    section h3 {
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      color: var(--muted);
+      margin-bottom: 30px;
+      border-bottom: 1px solid #e0e0e0;
+      padding-bottom: 10px;
+    }
+
+    /* 1. Year Summary - 横向排列卡片 */
+    .year-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .year-card {
+      background: var(--card);
+      padding: 40px;
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border: 1px solid rgba(0,0,0,0.03);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.02);
+    }
+
+    .year-card:hover {
+      transform: scale(1.01);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+      border-color: #d0d0d0;
+    }
+
+    .year-info h2 { margin: 0; font-size: 2rem; }
+    .year-info p { margin: 8px 0 0; color: var(--muted); }
+    .year-arrow { font-size: 1.5rem; color: #ddd; }
+
+    /* 2. Misc - 细长条卡片 */
+    .misc-list {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+
+    .misc-item {
+      background: var(--card);
+      padding: 16px 24px;
+      border-radius: 8px;
+      text-decoration: none;
+      color: inherit;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.95rem;
+      border-left: 3px solid transparent;
+    }
+
+    .misc-item:hover {
+      background: #fff;
+      border-left: 3px solid var(--accent);
+      padding-left: 30px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    }
+
+    .misc-tag {
+      font-size: 0.75rem;
+      background: #f0f0f0;
+      padding: 2px 8px;
+      border-radius: 4px;
+      color: #999;
+    }
+
+    footer {
+      text-align: center;
+      padding: 40px;
+      color: #ccc;
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 600px) {
+      header h1 { font-size: 2.2rem; }
+      .year-card { padding: 30px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <h1>No Code Found</h1>
+    <p class="subtitle">
+      I haven’t read or written much since high school. But I'd have a place to put down things that aren’t about code, and maybe get myself to pick up a book more often.
+    </p>
+  </header>
+
+  <main>
+    <section>
+      <h3>Year Summary</h3>
+      <div class="year-grid">
+        <a href="2025.html" class="year-card">
+          <div class="year-info">
+            <h2>2025</h2>
+            <p>研究与生活的再平衡</p>
+          </div>
+          <div class="year-arrow">→</div>
+        </a>
+        <a href="2024.html" class="year-card">
+          <div class="year-info">
+            <h2>2024</h2>
+            <p>转折与积累的一年</p>
+          </div>
+          <div class="year-arrow">→</div>
+        </a>
+      </div>
+    </section>
+
+    <section>
+      <h3>Misc</h3>
+      <div class="misc-list">
+        <a href="books.html" class="misc-item">
+          <span>阅读清单 · Reading List</span>
+          <span class="misc-tag">Books</span>
+        </a>
+        <a href="essays.html" class="misc-item">
+          <span>碎碎念与杂感</span>
+          <span class="misc-tag">Essays</span>
+        </a>
+        <a href="gallery.html" class="misc-item">
+          <span>镜头里的瞬息</span>
+          <span class="misc-tag">Photo</span>
+        </a>
+        <a href="music.html" class="misc-item">
+          <span>年度循环歌单</span>
+          <span class="misc-tag">Music</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    No Code Found · 2025
+  </footer>
+
 </body>
 </html>
 
