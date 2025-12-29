@@ -130,6 +130,35 @@ img, video {
   color: #0070f3; cursor: pointer;
   font-size: 13px; padding: 0; margin-top: 8px;
 }
+/* 回复项的缩进样式 */
+.comment-item.reply-item {
+  margin-left: 50px;       /* 向右缩进 */
+  padding: 15px 15px 15px 20px;
+  background: #f9f9f9;    /* 稍微深一点的背景色 */
+  border-radius: 12px;
+  border-bottom: none;    /* 去掉原本的底边线 */
+  border-left: 3px solid #eee; /* 左侧引导线 */
+  margin-top: -10px;      /* 向上靠拢，使其看起来像是在主贴下方 */
+  margin-bottom: 10px;
+}
+
+/* 回复项的头像可以稍微小一点 */
+.comment-item.reply-item .comment-avatar {
+  width: 36px;
+  height: 36px;
+  font-size: 14px;
+}
+
+/* “回复”标签 */
+.reply-tag {
+  font-size: 11px;
+  background: #eee;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #888;
+  margin-left: 8px;
+  font-weight: normal;
+}
 
 /* 底部 */
 footer {
