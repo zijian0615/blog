@@ -74,13 +74,29 @@
           return;
         }
     
-        commentList.innerHTML = comments.map(c => {
-          // 判断是否是回复（检查内容是否以 @ 开头）
+        // --- 排序算法开始 ---
+        let thread = []; // 存储最终排序后的数组
+        let mainComments = comments.filter(c => !c.content.trim().startsWith('@'));
+        let replies = comments.filter(c => c.content.trim().startsWith('@'));
+    
+        mainComments.forEach(main => {
+          thread.push(main); // 先放主留言
+          // 寻找所有回复这条主留言的评论（通过检查内容里是否包含 @用户名）
+          let relatedReplies = replies.filter(r => r.content.includes(`@${main.name}`));
+          thread.push(...relatedReplies); // 把属于它的回复紧跟其后
+        });
+    
+        // 处理那些可能没匹配上的孤儿回复（可选）
+        replies.forEach(r => {
+            if (!thread.includes(r)) thread.push(r);
+        });
+        // --- 排序算法结束 ---
+    
+        commentList.innerHTML = thread.map(c => {
           const isReply = c.content.trim().startsWith('@');
           const bgColor = colors[c.name.length % colors.length];
           const firstChar = c.name.charAt(0).toUpperCase();
           
-          // 如果是回复，添加缩进样式类 'reply-item'
           return `
             <div class="comment-item ${isReply ? 'reply-item' : ''}">
               <div class="comment-avatar" style="background: ${bgColor}">${firstChar}</div>
@@ -98,6 +114,7 @@
           `;
         }).join('');
       } catch (err) {
+        console.error(err);
         commentList.innerHTML = '<p style="color:red;">加载失败</p>';
       }
     }
