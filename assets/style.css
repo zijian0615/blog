@@ -190,6 +190,16 @@ img, video {
 .snake-icon:hover {
   transform: scale(1.1); /* 鼠标悬停稍微放大 */
 }
+/* 在 style.css 中加入这个呼吸灯效果 */
+.snake-icon:not(.playing) {
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(0, 112, 243, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(0, 112, 243, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(0, 112, 243, 0); }
+}
 
 /* 底部 */
 footer {
