@@ -96,20 +96,6 @@
     // 4. 辅助：监听音频状态同步图标
     bgm.onplay = () => musicTrigger.classList.add('playing');
     bgm.onpause = () => musicTrigger.classList.remove('playing');
-    // 格式化时间函数
-    function formatTime(dateStr) {
-      const date = new Date(dateStr);
-      const now = new Date();
-      const diff = (now - date) / 1000; // 秒
-
-      if (diff < 60) return '刚刚';
-      if (diff < 3600) return Math.floor(diff / 60) + '分钟前';
-      if (diff < 86400) return Math.floor(diff / 3600) + '小时前';
-      
-      return date.toLocaleString('zh-CN', { 
-        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
-      });
-    }
 
     // 加载留言
     async function loadComments() {
