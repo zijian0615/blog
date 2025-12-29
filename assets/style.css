@@ -159,6 +159,37 @@ img, video {
   margin-left: 8px;
   font-weight: normal;
 }
+/* Music */
+.snake-icon {
+  width: 60px;
+  height: 60px;
+  font-size: 40px; /* 如果用的是 Emoji */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  user-select: none;
+}
+
+/* 旋转动画 */
+@keyframes snake-rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* 当拥有 .playing 类时执行动画 */
+.snake-icon.playing {
+  animation: snake-rotate 3s linear infinite;
+  box-shadow: 0 0 15px rgba(0, 112, 243, 0.3); /* 播放时带点发光 */
+}
+
+.snake-icon:hover {
+  transform: scale(1.1); /* 鼠标悬停稍微放大 */
+}
 
 /* 底部 */
 footer {
