@@ -32,6 +32,44 @@
       <h2>视频</h2>
       <video controls src="assets/media/video.mp4"></video>
     </section>
+
+    <section id="comments">
+      <h2>留言</h2>
+      <form id="comment-form">
+        <input id="name" placeholder="你的名字" required />
+        <textarea id="content" placeholder="想说点什么…" required></textarea>
+        <button type="submit">发送</button>
+      </form>
+      <div id="comment-list"></div>
+    </section>
+    
+    <script>
+    const PAGE = "2025"; // 当前年份
+    const commentList = document.getElementById("comment-list")
+    
+    // 获取留言
+    async function loadComments() {
+      const res = await fetch(`/api/comment?page=${PAGE}`)
+      const comments = await res.json()
+      commentList.innerHTML = comments.map(c => `<p><strong>${c.name}</strong>: ${c.content}</p>`).join('')
+    }
+    loadComments()
+    
+    // 提交留言
+    document.getElementById("comment-form").onsubmit = async (e) => {
+      e.preventDefault()
+      const name = document.getElementById("name").value
+      const content = document.getElementById("content").value
+      await fetch('/api/comment', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ page: PAGE, name, content })
+      })
+      document.getElementById("name").value = ''
+      document.getElementById("content").value = ''
+      loadComments()
+    }
+    </script>
   </main>
 
   <footer>
