@@ -150,9 +150,12 @@
     function renderComment(comment, level = 0) {
       const bgColor = colors[comment.name.length % colors.length];
       const firstChar = comment.name.charAt(0).toUpperCase();
-      const indent = level * 24;
+      
+      // --- 修正点：只声明一次 indent，并限制最大缩进 ---
+      const maxIndentLevel = 5;
+      const indent = Math.min(level, maxIndentLevel) * 20; 
     
-      const isFolded = level >= 3; // 超过 3 层默认折叠
+      const isFolded = level >= 3; 
       const foldedClass = isFolded ? 'folded' : '';
       const toggleBtn = isFolded ? `<div class="toggle-children" onclick="toggleFold(this)">展开回复</div>` : '';
     
@@ -172,6 +175,7 @@
             <div class="comment-children">
               ${comment.children.map(child => renderComment(child, level + 1)).join('')}
             </div>
+          </div>
         </div>
       `;
     }
