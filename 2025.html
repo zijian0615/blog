@@ -44,30 +44,75 @@
     </section>
     
     <script>
-    const PAGE = "2025"; // 当前年份
-    const commentList = document.getElementById("comment-list")
+    const PAGE = "2025"; 
+    const commentList = document.getElementById("comment-list");
     
-    // 获取留言
-    async function loadComments() {
-      const res = await fetch(`/api/comment?page=${PAGE}`)
-      const comments = await res.json()
-      commentList.innerHTML = comments.map(c => `<p><strong>${c.name}</strong>: ${c.content}</p>`).join('')
+    // 1. 时间格式化工具：将 ISO 格式转为易读格式
+    function formatTime(dateStr) {
+        const date = new Date(dateStr);
+        return date.toLocaleString('zh-CN', { 
+            month: 'numeric', day: 'numeric', 
+            hour: '2-digit', minute: '2-digit' 
+        });
     }
-    loadComments()
     
-    // 提交留言
+    // 2. 获取留言列表
+    async function loadComments() {
+        const res = await fetch(`/api/comment?page=${PAGE}`);
+        const comments = await res.json();
+        
+        commentList.innerHTML = comments.map(c => {
+            // 生成基于名字的彩色头像背景
+            const colors = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae', '#eb2f96'];
+            const bgColor = colors[c.name.length % colors.length];
+            
+            return `
+                <div class="comment-item">
+                    <div class="comment-avatar" style="background: ${bgColor}">
+                        ${c.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div class="comment-content">
+                        <div class="comment-header">
+                            <span class="comment-name">${c.name}</span>
+                            <span class="comment-time">${formatTime(c.created_at)}</span>
+                        </div>
+                        <div class="comment-body">${c.content}</div>
+                        <div class="comment-actions">
+                            <button onclick="replyTo('${c.name}')">回复</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+    
+    // 3. 回复功能：点击回复自动填充 @名字
+    function replyTo(username) {
+        const textarea = document.getElementById("content");
+        textarea.value = `@${username} `;
+        textarea.focus();
+    }
+    
+    loadComments();
+    
+    // 4. 提交留言
     document.getElementById("comment-form").onsubmit = async (e) => {
-      e.preventDefault()
-      const name = document.getElementById("name").value
-      const content = document.getElementById("content").value
-      await fetch('/api/comment', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ page: PAGE, name, content })
-      })
-      document.getElementById("name").value = ''
-      document.getElementById("content").value = ''
-      loadComments()
+        e.preventDefault();
+        const nameInput = document.getElementById("name");
+        const contentInput = document.getElementById("content");
+        
+        await fetch('/api/comment', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+                page: PAGE, 
+                name: nameInput.value, 
+                content: contentInput.value 
+            })
+        });
+        
+        contentInput.value = ''; // 提交后清空内容，保留姓名
+        loadComments();
     }
     </script>
   </main>
