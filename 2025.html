@@ -52,7 +52,50 @@
     const PAGE = "2025";
     const commentList = document.getElementById("comment-list");
     const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#A29BFE'];
-
+    const bgm = document.getElementById('bgm');
+    const musicTrigger = document.getElementById('music-trigger');
+    
+    // 统一的状态管理函数
+    function playMusic() {
+        bgm.play().then(() => {
+            musicTrigger.classList.add('playing');
+        }).catch(err => {
+            console.log("播放被拦截:", err);
+        });
+    }
+    
+    function pauseMusic() {
+        bgm.pause();
+        musicTrigger.classList.remove('playing');
+    }
+    
+    // 1. 蛇图标的点击：手动切换开关
+    musicTrigger.addEventListener('click', (e) => {
+        e.stopPropagation(); // 防止触发下面的全局点击事件
+        if (bgm.paused) {
+            playMusic();
+        } else {
+            pauseMusic();
+        }
+    });
+    
+    // 2. 全局点击：只要还没播，点哪里都尝试触发
+    document.addEventListener('click', () => {
+        if (bgm.paused) {
+            playMusic();
+        }
+    }, { once: true }); // { once: true } 保证这个全局监听器只在第一次点击时生效
+    
+    // 3. 针对移动端（如微信、Safari）的触摸触发
+    document.addEventListener('touchstart', () => {
+        if (bgm.paused) {
+            playMusic();
+        }
+    }, { once: true });
+    
+    // 4. 辅助：监听音频状态同步图标
+    bgm.onplay = () => musicTrigger.classList.add('playing');
+    bgm.onpause = () => musicTrigger.classList.remove('playing');
     // 格式化时间函数
     function formatTime(dateStr) {
       const date = new Date(dateStr);
