@@ -2,6 +2,7 @@
 <html lang="zh-CN">
 <head>
   <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>2025 · 年度记录</title>
   <link rel="stylesheet" href="assets/style.css">
 </head>
@@ -9,119 +10,134 @@
 
   <header>
     <h1>2025</h1>
-    <p>这一年的关键词</p>
+    <p>这一年的关键词：沉淀、探索、生长</p>
   </header>
 
   <main>
     <section>
       <h2>年度回顾</h2>
-      <p>这一年发生了很多重要的事情。</p>
+      <p>这一年发生了很多重要的事情，我们见证了技术的变革，也留下了生活的痕迹。</p>
     </section>
 
     <section>
-      <h2>图片</h2>
-      <img src="assets/media/image.jpg" alt="">
-    </section>
-
-    <section>
-      <h2>音频</h2>
-      <audio controls src="assets/media/audio.mp3"></audio>
-    </section>
-
-    <section>
-      <h2>视频</h2>
-      <video controls src="assets/media/video.mp4"></video>
+      <h2>影像记忆</h2>
+      <img src="assets/media/image.jpg" alt="年度照片">
     </section>
 
     <section id="comments">
-      <h2>留言</h2>
+      <h2>留言互动</h2>
       <form id="comment-form">
-        <input id="name" placeholder="你的名字" required />
-        <textarea id="content" placeholder="想说点什么…" required></textarea>
-        <button type="submit">发送</button>
+        <input id="name" placeholder="你的昵称" required />
+        <textarea id="content" placeholder="写下你的想法..." rows="4" required></textarea>
+        <button type="submit">发布留言</button>
       </form>
-      <div id="comment-list"></div>
+
+      <div id="comment-list">
+        </div>
     </section>
-    
-    <script>
-    const PAGE = "2025"; 
-    const commentList = document.getElementById("comment-list");
-    
-    // 1. 时间格式化工具：将 ISO 格式转为易读格式
-    function formatTime(dateStr) {
-        const date = new Date(dateStr);
-        return date.toLocaleString('zh-CN', { 
-            month: 'numeric', day: 'numeric', 
-            hour: '2-digit', minute: '2-digit' 
-        });
-    }
-    
-    // 2. 获取留言列表
-    async function loadComments() {
-        const res = await fetch(`/api/comment?page=${PAGE}`);
-        const comments = await res.json();
-        
-        commentList.innerHTML = comments.map(c => {
-            // 生成基于名字的彩色头像背景
-            const colors = ['#f56a00', '#7265e6', '#ffbf00', '#00a2ae', '#eb2f96'];
-            const bgColor = colors[c.name.length % colors.length];
-            
-            return `
-                <div class="comment-item">
-                    <div class="comment-avatar" style="background: ${bgColor}">
-                        ${c.name.charAt(0).toUpperCase()}
-                    </div>
-                    <div class="comment-content">
-                        <div class="comment-header">
-                            <span class="comment-name">${c.name}</span>
-                            <span class="comment-time">${formatTime(c.created_at)}</span>
-                        </div>
-                        <div class="comment-body">${c.content}</div>
-                        <div class="comment-actions">
-                            <button onclick="replyTo('${c.name}')">回复</button>
-                        </div>
-                    </div>
-                </div>
-            `;
-        }).join('');
-    }
-    
-    // 3. 回复功能：点击回复自动填充 @名字
-    function replyTo(username) {
-        const textarea = document.getElementById("content");
-        textarea.value = `@${username} `;
-        textarea.focus();
-    }
-    
-    loadComments();
-    
-    // 4. 提交留言
-    document.getElementById("comment-form").onsubmit = async (e) => {
-        e.preventDefault();
-        const nameInput = document.getElementById("name");
-        const contentInput = document.getElementById("content");
-        
-        await fetch('/api/comment', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ 
-                page: PAGE, 
-                name: nameInput.value, 
-                content: contentInput.value 
-            })
-        });
-        
-        contentInput.value = ''; // 提交后清空内容，保留姓名
-        loadComments();
-    }
-    </script>
   </main>
 
   <footer>
-    <a href="2024.html">← 2024</a> |
-    <a href="index.html">返回首页</a> |
+    <a href="2024.html">← 2024</a>
+    <a href="index.html">首页</a>
     <a href="2026.html">2026 →</a>
   </footer>
 
+  <script>
+    const PAGE = "2025";
+    const commentList = document.getElementById("comment-list");
+    const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#FFA07A', '#98D8C8', '#A29BFE'];
+
+    // 格式化时间函数
+    function formatTime(dateStr) {
+      const date = new Date(dateStr);
+      const now = new Date();
+      const diff = (now - date) / 1000; // 秒
+
+      if (diff < 60) return '刚刚';
+      if (diff < 3600) return Math.floor(diff / 60) + '分钟前';
+      if (diff < 86400) return Math.floor(diff / 3600) + '小时前';
+      
+      return date.toLocaleString('zh-CN', { 
+        month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+      });
+    }
+
+    // 加载留言
+    async function loadComments() {
+      try {
+        const res = await fetch(`/api/comment?page=${PAGE}`);
+        const comments = await res.json();
+        
+        if (!comments || comments.length === 0) {
+          commentList.innerHTML = '<p style="text-align:center; color:#ccc; margin-top:20px;">暂无留言</p>';
+          return;
+        }
+
+        commentList.innerHTML = comments.map(c => {
+          const bgColor = colors[c.name.length % colors.length];
+          const firstChar = c.name.charAt(0).toUpperCase();
+          
+          return `
+            <div class="comment-item">
+              <div class="comment-avatar" style="background: ${bgColor}">${firstChar}</div>
+              <div class="comment-content">
+                <div class="comment-header">
+                  <span class="comment-name">${c.name}</span>
+                  <span class="comment-time">${formatTime(c.created_at)}</span>
+                </div>
+                <div class="comment-body">${c.content}</div>
+                <div class="comment-actions">
+                  <button onclick="replyTo('${c.name}')">回复</button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        commentList.innerHTML = '<p style="color:red;">加载留言失败，请检查后端配置</p>';
+      }
+    }
+
+    // 回复快捷操作
+    function replyTo(username) {
+      const textarea = document.getElementById("content");
+      textarea.value = `@${username} `;
+      textarea.focus();
+    }
+
+    // 提交留言
+    document.getElementById("comment-form").onsubmit = async (e) => {
+      e.preventDefault();
+      const nameInput = document.getElementById("name");
+      const contentInput = document.getElementById("content");
+      const btn = e.target.querySelector('button');
+
+      btn.disabled = true;
+      btn.innerText = '发送中...';
+
+      try {
+        await fetch('/api/comment', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ 
+            page: PAGE, 
+            name: nameInput.value, 
+            content: contentInput.value 
+          })
+        });
+        contentInput.value = '';
+        await loadComments();
+      } catch (err) {
+        alert('发送失败，请稍后再试');
+      } finally {
+        btn.disabled = false;
+        btn.innerText = '发布留言';
+      }
+    }
+
+    // 初始加载
+    loadComments();
+  </script>
 </body>
 </html>
