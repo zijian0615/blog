@@ -59,6 +59,17 @@ img, video {
   font-size: .9rem;
   color: #777;
 }
+.image-gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 20px;
+  justify-items: center;
+}
+.image-gallery-grid .image img {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.08);
+}
 
 /* 留言表单美化 */
 #comment-form {
