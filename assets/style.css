@@ -62,7 +62,7 @@ img, video {
 .image-gallery-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 20px;
+  gap: 10px 20px;
   justify-items: center;
 }
 .image-gallery-grid .image img {
