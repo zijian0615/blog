@@ -70,6 +70,18 @@ img, video {
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0,0,0,.08);
 }
+.rotate-90 img {
+  transform: rotate(90deg);
+}
+
+.rotate-180 img {
+  transform: rotate(180deg);
+}
+
+.rotate-270 img {
+  transform: rotate(270deg);
+}
+
 
 /* 留言表单美化 */
 #comment-form {
