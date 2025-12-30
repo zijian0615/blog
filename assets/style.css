@@ -54,6 +54,7 @@ img, video {
   box-shadow: 0 10px 30px rgba(0,0,0,.08);
 }
 
+
 .image figcaption {
   margin-top: 10px;
   font-size: .9rem;
@@ -61,6 +62,7 @@ img, video {
 }
 .image-gallery-grid {
   display: grid;
+  grid-auto-rows: 300px;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 10px 20px;
   justify-items: center;
@@ -70,6 +72,12 @@ img, video {
   border-radius: 12px;
   box-shadow: 0 10px 30px rgba(0,0,0,.08);
 }
+.image-gallery-grid .full-height img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
 .rotate-90 img {
   transform: rotate(90deg);
 }
