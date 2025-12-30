@@ -37,7 +37,7 @@ h2 {
   margin-bottom: 20px;
 }
 
-/* img, video {
+img, video {
   max-width: 100%;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.05);
@@ -80,68 +80,8 @@ h2 {
 
 .rotate-270 img {
   transform: rotate(270deg);
-} */
-/* 1. 基础布局：给章节和标题留白 */
-
-/* 2. 通用媒体基础样式 */
-img, video {
-  max-width: 100%;             /* 防止溢出屏幕 */
-  height: auto;                /* 保持比例 */
-  vertical-align: middle;      /* 解决图片下方默认空隙问题 */
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
 }
 
-/* 3. 单张大图展示容器 (Block Image) */
-.image {
-  margin: 40px 0;
-  text-align: center;
-}
-
-.image img {
-  /* 这里的阴影更深，让大图更有浮动感 */
-  box-shadow: 0 10px 30px rgba(0,0,0,.08); 
-}
-
-.image figcaption {
-  margin-top: 10px;
-  font-size: .9rem;
-  color: #777;
-}
-
-/* 4. 自适应网格相册 (Gallery) */
-.image-gallery-grid {
-  display: grid;
-  /* 自动填充列：每列最小 200px，宽度平分 */
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-  gap: 10px 20px;
-  justify-items: center;
-}
-
-/* 确保网格内的图片填满容器 */
-.image-gallery-grid .image {
-  margin: 0; /* 清除单图容器的上下边距，由网格 gap 控制 */
-}
-
-.image-gallery-grid .image img {
-  width: 100%; 
-}
-
-/* 5. 功能类：旋转图片 */
-.rotate-90 img  { transform: rotate(90deg); }
-.rotate-180 img { transform: rotate(180deg); }
-.rotate-270 img { transform: rotate(270deg); }
-
-/* 6. 【新增】行高自适应类：解决你之前的问题 */
-/* 使用方法：<img class="img-line-height" src="..."> */
-.img-line-height {
-  height: 1.2em;      /* 设为 1.2em 左右可以完美对齐大部分文字行高 */
-  width: auto;        /* 宽度根据高度等比缩放 */
-  border-radius: 4px; /* 小图用小圆角更精致 */
-  box-shadow: none;   /* 行内小图通常不需要大阴影 */
-  display: inline-block;
-  margin: 0 2px;      /* 左右留一点点间距，不挤着文字 */
-}
 
 /* 留言表单美化 */
 #comment-form {
