@@ -67,28 +67,11 @@ img, video {
   gap: 10px 20px;
   justify-items: center;
 }
-.image-gallery-grid .image img {
-  width: 100%;
-  border-radius: 12px;
-  box-shadow: 0 10px 30px rgba(0,0,0,.08);
-}
-.image-gallery-grid .full-height img {
-  height: 100%;
-  width: 100%;
-  object-fit: cover;
-}
 
 .rotate-90 img {
   transform: rotate(90deg);
 }
 
-.rotate-180 img {
-  transform: rotate(180deg);
-}
-
-.rotate-270 img {
-  transform: rotate(270deg);
-}
 
 
 /* 留言表单美化 */
