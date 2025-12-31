@@ -54,7 +54,7 @@ img, video {
 }
 
 .image {
-  margin: 20px 12px;
+  margin: 0;
   text-align: center;
 }
 
@@ -72,7 +72,6 @@ img, video {
 }
 .image-gallery-grid {
   display: grid;
-  grid-auto-rows: 300px;
   grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   gap: 10px 20px;
   justify-items: center;
