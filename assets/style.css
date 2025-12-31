@@ -22,11 +22,21 @@ h1 {
   margin-bottom: 8px;
 }
 
-main {
+/* main {
   max-width: 800px;
   margin: auto;
   padding: 0 20px 80px;
+} */
+main {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 40px 32px 80px;
+
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  background: #fff;
 }
+
 
 section { margin-bottom: 20px; }
 
