@@ -81,6 +81,11 @@ img, video {
   transform: rotate(90deg);
 }
 
+.comment-note {
+  margin: 8px 0 20px;
+  font-size: 0.85rem;
+  color: #888;
+}
 
 
 /* 留言表单美化 */
